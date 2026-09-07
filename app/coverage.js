@@ -31,3 +31,44 @@ export const coverage = () => [
   { name: 'Fisioterapia', icon: 'M12 5c-3-3-8-1-8 4 0 6 3 10 4 10s1-4 4-4 3 4 4 4 4-4 4-10c0-5-5-7-8-4Z', wait: [90, 90, 90], cov: [yes('10 sesiones al año'), yes('15 sesiones al año'), yes('20 sesiones al año')] },
   { name: 'Medicamentos en internación', icon: 'M10 3 3 10a5 5 0 0 0 7 7l7-7a5 5 0 0 0-7-7ZM7 7l7 7', cov: [yes('Hasta ₲ 500 mil por evento'), yes('Hasta ₲ 1 millón por evento'), yes('Hasta ₲ 1,5 millones por evento')] },
 ];
+
+// LAS ESPERAS QUE IMPORTAN AL DECIDIR (6 ago 2026 — "Sería bueno ser ya
+// transparentes con las carencias", Arturo). Es lo que el simulador muestra
+// ANTES de pedir nombre y teléfono: la Puerta 1.5 del criterio de evaluación
+// fallaba exactamente por no hacerlo. Orden [Bronze, Silver, Gold], en días;
+// null = ese plan no cubre el servicio (regla AD de arriba: ahí no hay espera
+// que contar). Cada fila cita de dónde sale — sin fuente, un dato no existe.
+// Fuente: datos/planes-vigentes/grilla-coberturas-precios-jul2026.json.
+export const carencias = () => [
+  // Cuadernillo, textual en quote.js: "Urgencias 24 h al 100%, desde el día uno".
+  // Consultas sin carencia (FAQ de la home, verificada jul 2026).
+  { que: 'Consultas y urgencias', dias: [0, 0, 0] },
+  // Cuadro 1 (laboratorio), filas con cobertura: la moda es 60 días en los
+  // tres planes (Bronze/Silver 167 de 283; Gold 296 de 343). El resto espera
+  // 90-120 días en Bronze/Silver y 30 en Gold — por eso "la mayoría".
+  { que: 'Análisis de laboratorio', dias: [60, 60, 60], nota: 'la mayoría' },
+  { que: 'Ecografías', dias: [60, 60, 60] },
+  { que: 'Tomografía', dias: [60, 60, 30] },
+  // Parámetros clave: "Carencia – internación clínica por evento agudo: 60 días".
+  { que: 'Internación por algo agudo', dias: [60, 60, 60] },
+  { que: 'Fisioterapia', dias: [90, 90, 90] },
+  { que: 'Resonancia', dias: [null, 150, 150], sinCobertura: 'Desde Silver' },
+  // Cuadro 3 (cirugías e internación): 292 de 314 filas → 210 / 180 / 150 días.
+  // ⚠ La FAQ decía "7 meses" para los tres planes: era el número de Bronze.
+  // Silver espera 6 y Gold 5. Se corrigió el 6 ago 2026.
+  { que: 'Cirugías programadas', dias: [210, 180, 150], nota: 'la mayoría' },
+  // Parámetros clave: "Carencia de maternidad: 300 días". Cesárea: 150 en Gold.
+  { que: 'Parto', dias: [300, 300, 300], notaPlan: [null, null, 'La cesárea espera 5 meses en Gold'] },
+];
+
+// Plan Vital (65+) tiene grilla propia y agrupa las coberturas POR carencia
+// (grilla-vital-coberturas-jul2026.json → coberturas_por_carencia). Un solo
+// valor por fila: es un plan único, sin niveles.
+export const carenciasVital = () => [
+  { que: 'Consultas, urgencias y ambulancia a domicilio', dias: 0 },
+  { que: 'Laboratorio de rutina, radiografías y electrocardiograma', dias: 0 },
+  { que: 'Fisioterapia', dias: 0 },
+  { que: 'Análisis complementarios, ecografías y Papanicolau', dias: 90 },
+  { que: 'Cirugías menores y procedimientos ambulatorios', dias: 180 },
+  { que: 'Internación, cirugías y terapia intensiva', dias: 365 },
+];

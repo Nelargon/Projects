@@ -1023,6 +1023,43 @@ usa `npm ci`).
       nombrados va a `sp-interno`. A la web pública solo llegan afirmaciones
       sobre la **categoría de producto**, con fuente y fecha.
 
+12d. **⭐ LA CARENCIA ANTES DEL TELÉFONO (6 ago 2026 — *"Sería bueno ser ya
+    transparentes con las carencias"*, Arturo). HECHO** (BITACORA cap. 70).
+    El resultado del simulador daba el precio y pedía nombre y teléfono **sin
+    nombrar la carencia**; la Puerta 1.5 del criterio de evaluación fallaba
+    exactamente por eso, y era el hallazgo más accionable de la Puerta 1.
+    - **Qué hay ahora:** antes del formulario, un bloque *"Cuánto esperás para
+      usar cada cobertura"* con las esperas del plan elegido — nueve servicios
+      en Bronze/Silver/Gold, seis en Vital — ordenadas de "sin espera" a "10
+      meses" (se leen como línea de tiempo, no como letra chica); lo que el
+      plan no cubre va al final como oportunidad ("Desde Silver", dorado). La
+      cotización descargable las lleva también.
+    - **Una sola verdad:** salen de `app/coverage.js` (`carencias()` y
+      `carenciasVital()`), la misma fuente que el comparador y `/planes`. Cada
+      fila cita de dónde sale en la grilla. Vital **sí** tiene datos propios
+      (`grilla-vital-coberturas-jul2026.json` agrupa por carencia) — el
+      instinto de "para 65+ que lo diga el asesor" era el mismo derivar-lo-que-
+      ya-sabemos que este bloque vino a corregir.
+    - **Guarda 11w:** la frase del usuario es el acuerdo **para esta pieza**
+      (contextualizar el número). Las otras tres direcciones del puente de
+      venta —datos como regalo, cara del asesor, misma lengua cálida— siguen
+      EN DISEÑO y bajo la guarda.
+    - **Verificación de posición, no de presencia:** la suite (1b, 1b-bis)
+      comprueba sobre el DOM que el bloque precede al formulario y trae parto
+      10 meses; en 390px, que entra sin desborde. Si alguien lo baja "para
+      convertir más", el build se pone rojo.
+    - **Hallazgo colateral corregido:** la FAQ decía *"cirugías programadas, 7
+      meses"* para los tres planes; la grilla dice 210/180/150 días (7 / 6 / 5
+      meses). Error en la dirección segura, por eso nadie lo vio.
+    - **De dónde viene el pedido:** es el acto A7 de la estrategia de marketing
+      *"levantar la niebla"* — la transparencia como práctica verificable, no
+      como adjetivo — que vive en `sp-interno`
+      (`project/ESTRATEGIA-levantar-la-niebla-2026-08.md`, privado). Cada
+      pieza así se publica solo cuando es cierta y se protege con un test.
+    Territorio: `app/components/Simulador.jsx`, `app/coverage.js`,
+    `app/glossary.jsx` (`waitLabel` gana un modo corto), `app/page.jsx` (FAQ),
+    `qa/`.
+
 ---
 
 ## 4. PENDIENTES PRIORIZADOS — el siguiente ciclo
@@ -1821,6 +1858,9 @@ contra las tres puertas, con números.
 4. **Las 10 preguntas** de la Puerta 1.1 no se pueden correr hasta que la lista
    exista; hay material previo en `sp-interno`
    (`PREGUNTAS-FRECUENTES-asesores-2026-07.md`).
+5. ~~**La carencia antes del teléfono** (Puerta 1.5)~~ — **hecha el 6 ago**
+   (dec. 12d): el resultado del simulador muestra las esperas del plan antes del
+   formulario, y la suite verifica la posición, no solo la presencia.
 
 ⚠ **Contradicción de alcance que excede a la web y no se resolvió acá:** el
 criterio se declara aplicable a *"entregas de fase 1: rediseño web, cotizador,

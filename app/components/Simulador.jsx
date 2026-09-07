@@ -8,6 +8,25 @@ import {
 } from '../quote';
 import { buscarCiudad, redNota, zonaConRed, DEPARTAMENTOS } from '../geo';
 import { track } from '../track';
+import { carencias, carenciasVital } from '../coverage';
+import { Term, waitLabel } from '../glossary';
+
+// Las esperas del plan elegido, listas para mostrar: misma fuente que el
+// comparador de la home y /planes (coverage.js) — una sola verdad, muchas
+// salidas. Ordenadas de "sin espera" a la más larga, para que se lean como una
+// línea de tiempo y no como letra chica. Lo que el plan no cubre queda al
+// final, dicho como oportunidad ("Desde Silver"), nunca como falta.
+function carenciasDe(d) {
+  if (d.who === 'padres') return carenciasVital().map((c) => ({ que: c.que, dias: c.dias, label: waitLabel(c.dias, true), nota: '', sinCobertura: false }));
+  const idx = { esencial: 0, equilibrio: 1, amplia: 2 }[d.nivel];
+  if (idx == null) return [];
+  return carencias()
+    .map((c) => {
+      const dias = c.dias[idx];
+      return { que: c.que, dias, label: dias == null ? c.sinCobertura : waitLabel(dias, true), nota: (c.notaPlan && c.notaPlan[idx]) || c.nota || '', sinCobertura: dias == null };
+    })
+    .sort((a, b) => (a.dias == null ? 1e9 : a.dias) - (b.dias == null ? 1e9 : b.dias));
+}
 
 const INITIAL_SIM = {
   // ubi = {ciudad, deptId, deptNombre} (buscador de ciudades, HANDOFF 11h);
@@ -137,6 +156,9 @@ export default function Simulador() {
     if (ad.length) { L.push('Coberturas adicionales:'); ad.forEach((o) => L.push('  · ' + o.label + ': + ' + fmt(o.price))); }
     L.push('');
     L.push('TOTAL ESTIMADO: ' + fmt(r.price) + ' / mes');
+    // Lo que ves es lo que te llevás: las esperas viajan en la cotización.
+    const esperas = carenciasDe(d);
+    if (esperas.length) { L.push(''); L.push('Cuánto esperás para usar cada cobertura (carencia):'); esperas.forEach((c) => L.push('  · ' + c.que + ': ' + c.label + (c.nota ? ' (' + c.nota + ')' : ''))); }
     if (r.autoPay) L.push('Con débito automático o tarjeta de crédito: ' + fmt(r.autoPay) + ' / mes (10% de descuento)');
     if (r.vitalParticular) L.push('Precio con débito automático — pagando particular: ' + fmt(r.vitalParticular) + ' / mes');
     L.push('');
@@ -381,6 +403,7 @@ export default function Simulador() {
     O.addons.filter((o) => (d.addons || []).includes(o.k)).forEach((o) => items.push({ label: o.label, amount: '+ ' + fmt(o.price) }));
     return items;
   })() : [];
+  const resCarencias = r ? carenciasDe(d) : [];
 
   // El acompañamiento reacciona a lo que la persona eligió — como haría un
   // asesor que escucha — en vez de repetir un mensaje fijo por paso.
@@ -439,7 +462,7 @@ export default function Simulador() {
     resRedNota: r && r.ubi ? redNota(r.ubi) : '',
     resAutoPay: r && r.autoPay ? fmt(r.autoPay) : '', resEsDebito: !!(r && r.vitalParticular), resVitalParticular: r && r.vitalParticular ? fmt(r.vitalParticular) : '',
     resAddonsText: r ? O.addons.filter((o) => (d.addons || []).includes(o.k)).map((o) => o.label).join(' · ') : '', hasAddons: r ? (d.addons || []).length > 0 : false,
-    resBreakdown, resTotal: r ? fmt(r.price) : '',
+    resBreakdown, resCarencias, resTotal: r ? fmt(r.price) : '',
     planPreset, resLabel: planPreset ? 'Tu plan elegido' : 'Plan recomendado',
     // Mini-comparador con TU precio: "editable pero puesto" (decisión del usuario).
     // Cambiar de plan recalcula el resultado sin salir de la pantalla.
@@ -709,6 +732,36 @@ export default function Simulador() {
                         <span className="num-tnum" style={css('font-size:12px;font-weight:700;color:var(--sp-muted)')}>{o.price}</span>
                       </button>
                     ))}
+                  </div>
+                </div>
+              )}
+
+              {/* LAS ESPERAS, ANTES DEL TELÉFONO (6 ago 2026 — "Sería bueno ser
+                  ya transparentes con las carencias", Arturo). Hasta hoy el
+                  resultado daba el precio y pedía nombre y teléfono sin nombrar
+                  la carencia; la Puerta 1.5 del criterio de evaluación fallaba
+                  exactamente por eso. Va ANTES del formulario a propósito — es
+                  el acto "te decimos la carencia antes de pedirte el teléfono"
+                  de la estrategia de marketing (sp-interno) — y el QA (1b) se
+                  pone rojo si alguien lo baja "para convertir más". */}
+              {sim.resCarencias.length > 0 && (
+                <div data-sp-carencias={sim.resName} style={css('margin-top:16px;border:1px solid var(--sp-line);border-radius:var(--r-sm);overflow:hidden')}>
+                  <div style={css('padding:14px 16px 11px')}>
+                    <div style={css('font-size:15px;font-weight:800;color:var(--sp-navy);line-height:1.3')}>Cuánto esperás para usar cada cobertura</div>
+                    <p style={css('font-family:var(--font-inter),sans-serif;font-size:12.5px;color:var(--sp-muted);line-height:1.5;margin:4px 0 0')}>Es la <Term k="carencia">carencia</Term> del {sim.resName}: el reloj arranca el día que te afiliás, no el día que lo necesitás. Te lo decimos ahora, antes de pedirte el teléfono, para que el número que ves sea el número completo.</p>
+                  </div>
+                  <div style={css('border-top:1px solid var(--sp-line-2)')}>
+                    {sim.resCarencias.map((c, i) => (
+                      <div key={i} data-sp-carencia-row style={css('display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:8px 16px;font-family:var(--font-inter),sans-serif;font-size:13.5px;line-height:1.4;border-top:' + (i === 0 ? '0' : '1px solid var(--sp-line-2)'))}>
+                        <span style={css('min-width:0;color:var(--sp-text)')}>{c.que}{c.nota && <span style={css('display:block;font-size:11.5px;color:var(--sp-muted)')}>{c.nota}</span>}</span>
+                        <span style={css('white-space:nowrap;font-weight:700;color:' + (c.sinCobertura ? 'var(--sp-gold-ink)' : c.dias === 0 ? 'var(--sp-teal-deep)' : 'var(--sp-navy)'))}>{c.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div style={css('padding:9px 16px;background:var(--sp-mint-tint);border-top:1px solid var(--sp-line-2);font-family:var(--font-inter),sans-serif;font-size:11.5px;color:var(--sp-muted);line-height:1.4')}>
+                    {sim.isPadres
+                      ? 'Grilla vigente del Plan Vital, julio 2026. El detalle exacto lo confirmás con tu asesor antes de firmar.'
+                      : <>Grilla vigente, julio 2026. El detalle estudio por estudio está en <a href={`${BP}/que-cubre/`} className="link-teal" style={css('color:var(--sp-teal-deep);font-weight:700')}>Qué cubre</a>.</>}
                   </div>
                 </div>
               )}

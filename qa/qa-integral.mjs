@@ -93,6 +93,26 @@ console.log('\n== 1. FUNCIONAL ==');
     });
     if (tilde && tilde.dx <= 2 && tilde.dy <= 2) ok('funcional', 'resultado: tilde del match centrado en el aro (±2px)');
     else falla('funcional', 'confunde', 'el tilde del resultado no está centrado en el aro' + (tilde ? ' (dx=' + tilde.dx.toFixed(1) + ', dy=' + tilde.dy.toFixed(1) + ')' : ' (no encontrado)'), '/simulador/');
+    /* Puerta 1.5 del criterio: el flujo que pide nombre y teléfono nombra la
+       carencia ANTES de pedirlos. Hasta el 6 ago 2026 esta fila fallaba y era
+       el hallazgo más accionable de la Puerta 1. Se verifica sobre el DOM
+       renderizado, no sobre el código: el bloque existe, tiene tamaño,
+       precede al formulario, y trae la espera más cara de descubrir tarde
+       (parto, 10 meses). Si mañana alguien mueve el bloque debajo del
+       formulario "para convertir más", esto se pone rojo. */
+    const car = await page.evaluate(() => {
+      const b = document.querySelector('[data-sp-carencias]');
+      const f = document.querySelector('input[placeholder*="ombre"]');
+      if (!b) return { ok: false, motivo: 'no hay bloque de esperas en el resultado' };
+      const r = b.getBoundingClientRect();
+      const filas = Array.from(b.querySelectorAll('[data-sp-carencia-row]')).map((x) => x.textContent.trim());
+      const antes = !!(f && (b.compareDocumentPosition(f) & Node.DOCUMENT_POSITION_FOLLOWING));
+      return { ok: r.width > 0 && r.height > 0, antes, filas, plan: b.getAttribute('data-sp-carencias') };
+    });
+    if (!car.ok) falla('funcional', 'roto', 'Puerta 1.5: ' + (car.motivo || 'el bloque de esperas no tiene tamaño'), '/simulador/');
+    else if (!car.antes) falla('funcional', 'confunde', 'Puerta 1.5: las esperas aparecen DESPUÉS del formulario de contacto — el criterio pide antes', '/simulador/');
+    else if (car.filas.length < 7 || !car.filas.some((t) => /parto/i.test(t) && /10 meses/.test(t))) falla('funcional', 'confunde', 'Puerta 1.5: esperas del plan incompletas (' + car.filas.length + ' filas; parto de 10 meses ' + (car.filas.some((t) => /parto/i.test(t)) ? 'presente' : 'ausente') + ')', '/simulador/');
+    else ok('funcional', 'Puerta 1.5: las esperas del ' + car.plan + ' (' + car.filas.length + ' servicios, parto de 10 meses incluido) se muestran antes de pedir nombre y teléfono');
     const nombre = page.locator('input[placeholder*="ombre"]');
     if (await nombre.count()) {
       await nombre.fill('QA Prueba');
@@ -125,6 +145,24 @@ console.log('\n== 1. FUNCIONAL ==');
     const cbox = await cont.boundingBox();
     if (cbox && cbox.y + cbox.height <= 670 + 260) ok('responsive', 'simulador móvil paso 4 (edades): el CTA queda a menos de un tercio de pantalla de scroll');
     else falla('responsive', 'confunde', 'simulador móvil: el CTA de edades queda demasiado abajo (y=' + (cbox ? Math.round(cbox.y) : '—') + ')', '/simulador/');
+    // ...y en el resultado, el bloque de esperas (Puerta 1.5) entra en 390px
+    // sin desbordar y queda ANTES del formulario — en el celular, que es por
+    // donde entra el 77% del tráfico.
+    await cont.click().catch(() => {});
+    await movil.waitForTimeout(1500);
+    const carM = await movil.evaluate(() => {
+      const b = document.querySelector('[data-sp-carencias]');
+      if (!b) return null;
+      const r = b.getBoundingClientRect();
+      const filas = Array.from(b.querySelectorAll('[data-sp-carencia-row]'));
+      const desborda = filas.some((x) => x.scrollWidth > x.clientWidth + 1) || b.scrollWidth > b.clientWidth + 1;
+      const f = document.querySelector('input[placeholder*="ombre"]');
+      return { right: Math.round(r.right), desborda, antes: !!(f && f.getBoundingClientRect().top > r.bottom), filas: filas.length };
+    });
+    if (!carM) falla('responsive', 'roto', 'simulador móvil: no hay bloque de esperas en el resultado', '/simulador/');
+    else if (carM.right > 390 || carM.desborda) falla('responsive', 'confunde', 'simulador móvil: el bloque de esperas desborda en 390px (borde derecho ' + carM.right + ')', '/simulador/');
+    else if (!carM.antes) falla('responsive', 'confunde', 'simulador móvil: el formulario queda por encima de las esperas', '/simulador/');
+    else ok('responsive', 'simulador móvil 390px: las ' + carM.filas + ' esperas del plan entran sin desborde y quedan antes del formulario');
     await movil.close();
   }
 
