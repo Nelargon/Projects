@@ -94,7 +94,7 @@ console.log('\n== 1. FUNCIONAL ==');
     if (tilde && tilde.dx <= 2 && tilde.dy <= 2) ok('funcional', 'resultado: tilde del match centrado en el aro (±2px)');
     else falla('funcional', 'confunde', 'el tilde del resultado no está centrado en el aro' + (tilde ? ' (dx=' + tilde.dx.toFixed(1) + ', dy=' + tilde.dy.toFixed(1) + ')' : ' (no encontrado)'), '/simulador/');
     /* Puerta 1.5 del criterio: el flujo que pide nombre y teléfono nombra la
-       carencia ANTES de pedirlos. Hasta el 6 ago 2026 esta fila fallaba y era
+       carencia ANTES de pedirlos. Hasta el 7 sep 2026 esta fila fallaba y era
        el hallazgo más accionable de la Puerta 1. Se verifica sobre el DOM
        renderizado, no sobre el código: el bloque existe, tiene tamaño,
        precede al formulario, y trae la espera más cara de descubrir tarde

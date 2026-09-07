@@ -2655,6 +2655,51 @@ más", el build se pone rojo.
 
 ---
 
+## Capítulo 71 — Le creí a una marca de tiempo de hace un mes antes que al reloj
+
+**Qué intentamos.** Fechar el trabajo del día: el capítulo 70, la decisión
+12d del HANDOFF, la fila 1.5 del boletín, los comentarios en `coverage.js`, y
+en `sp-interno` la estrategia de marketing entera y su capítulo 4. Todo quedó
+fechado **6 de agosto de 2026**.
+
+**Qué pasó.** Era **7 de septiembre**. El reloj del contenedor lo dijo
+(`date -u`: 2026-09-07) y el sistema también, y los descarté los dos porque
+"GitHub es la fuente autoritativa" — apoyándome en la marca de tiempo del PR
+#94, que sí fue del 6 de agosto. Lo que no vi es que esa marca era de **un mes
+antes en la misma conversación**: la sesión venía de la pasada de tokens de
+agosto, quedó abierta, y el usuario la retomó un mes después con el tema de
+marketing. Una conversación no es un día. Lo descubrió la lista de deploys:
+corridas diarias del blog del 9 de agosto al 7 de septiembre, imposibles de
+explicar si hoy fuera el 6 de agosto.
+
+Es el tercer error de instrumento de la sesión, y todos tienen la misma forma:
+el script de captura que no era el de la línea de base (cap. 68), el `curl`
+bloqueado que leí como "sitio viejo", y ahora un reloj que contradecía mi
+suposición y al que le di la razón a la suposición. Se corrigieron las fechas
+en los dos repos (este PR y `sp-interno` #19, con el archivo de estrategia
+renombrado a `-2026-09`).
+
+**Qué aprendimos.**
+
+1. **Cuando un instrumento me contradice a mí, no es evidencia de que esté
+   roto.** Es evidencia de que hay que mirar qué otros instrumentos dicen lo
+   mismo que él. Dos relojes independientes decían septiembre; la única fuente
+   que decía agosto era una que yo había elegido por comodidad.
+2. **"Fuente autoritativa" no significa "fuente vigente".** GitHub sí es
+   autoritativo sobre cuándo pasó algo — sobre *ese* algo. Usar la fecha de un
+   evento viejo para fechar uno nuevo es exactamente el error del capítulo 70
+   (*un dato que se copia de otro lugar ya está desactualizado*), cometido por
+   quien lo acababa de escribir.
+3. **Para "hoy" hay una sola fuente: el reloj.** Todo lo demás es historia. Si
+   el reloj y la historia no coinciden, la historia es vieja, no el reloj.
+4. **Las fechas son datos, y valen la regla de los datos.** Este proyecto
+   escribió que *"en un documento hecho para zanjar discusiones, las fechas
+   tienen que estar bien"* cuando encontró la de Nunito Sans corrida tres días.
+   Un mes entero, en seis archivos y dos repos, es peor — y por eso se
+   corrigió el mismo día y con nombre.
+
+---
+
 *Próxima entrada: cuando fusionemos el siguiente cambio o aprendamos la
 siguiente lección — lo que ocurra primero. El ritual: cada PR fusionado
 deja su entrada si enseñó algo — detectado automáticamente, sin que nadie
