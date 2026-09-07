@@ -1,6 +1,6 @@
 # El prototipo contra las tres puertas — boletín medido
 
-**Fecha de la corrida:** 06/08/2026 · **Instrumento:** `qa/qa-integral.mjs`
+**Fecha de la corrida:** 06/08/2026, actualizado el 07/09/2026 (Puerta 1.5) · **Instrumento:** `qa/qa-integral.mjs`
 **Método:** Chromium headless sobre el build de producción servido bajo
 `/sp-prototipo/`. CPU emulada 4× más lenta y red 4G (9 Mbps, 150 ms de latencia)
 para las métricas de carga — "el celular que la gente tiene", no la notebook del
@@ -26,7 +26,7 @@ que construye.
 
 | Puerta | Objetivo | Estado del prototipo |
 |---|---|---|
-| **1 · Claridad** | A | **NO PASA todavía** — 1.5 pasa desde el 6 ago; 1.4 tiene hallazgos en el blog; 1.1 no se pudo correr |
+| **1 · Claridad** | A | **NO PASA todavía** — 1.5 pasa desde el 7 sep; 1.4 tiene hallazgos en el blog; 1.1 no se pudo correr |
 | **2 · Accesibilidad y rendimiento** | A | **Pasa lo medible**; una métrica no es medible en laboratorio |
 | **3 · Craft, marca y futuro** | B+ | **Pasa 3.1 y 3.3**; 3.2 espera una decisión de marca (`₲` vs `Gs.`) |
 
@@ -47,7 +47,7 @@ que construye.
 
 1. **La Puerta 1 no pasa todavía — pero ya no por lo que fallaba.** El flujo
    que pide nombre y teléfono **ahora nombra la carencia antes de pedirlos**
-   (1.5, arreglado y automatizado el 6 ago). Lo que sigue abierto es la prueba
+   (1.5, arreglado y automatizado el 7 sep). Lo que sigue abierto es la prueba
    de las diez preguntas, que ni siquiera se pudo correr (1.1), y cinco notas
    del blog con jerga (1.4).
 2. **La Puerta 3 pasa por tokens, y no era gratis.** Cuando este boletín se
@@ -71,7 +71,7 @@ que construye.
 | **1.2** Lugar permanente para lo que NO cubrimos, sin PDF ni enlace externo | **Inspección manual** de la sección de planes: contiene exclusiones ("Para que no haya sorpresas"), carencias por servicio y el aviso de los 10 meses de parto, en la misma página, sin abrir nada | ✅ *(no automatizado)* |
 | **1.3** Precio con piso real, no "consultanos" | **Inspección manual** del hero (publica "desde ₲ 238.000") + **automatizado** el recorrido del simulador hasta ver un precio sin dejar datos | ✅ *(el origen del "desde" NO está verificado — ver abajo)* |
 | **1.4** Lenguaje de paciente, cero jerga | **Automatizado**: la suite busca `cartilla`, `prestación` y `práctica` en el HTML publicado de las 9 páginas | ⚠️ **3 notas del blog** dicen "práctica"; 2 tienen placeholders "a confirmar" |
-| **1.5** El flujo que pide datos avisa antes de pedirlos | **Automatizado** (6 ago 2026): la suite llega al resultado del simulador y verifica sobre el DOM que el bloque de esperas existe, tiene tamaño, **precede al formulario** y trae la espera más cara de descubrir tarde (parto, 10 meses); en 390px, además, que entra sin desborde | ✅ **PASA** — ver abajo |
+| **1.5** El flujo que pide datos avisa antes de pedirlos | **Automatizado** (7 sep 2026): la suite llega al resultado del simulador y verifica sobre el DOM que el bloque de esperas existe, tiene tamaño, **precede al formulario** y trae la espera más cara de descubrir tarde (parto, 10 meses); en 390px, además, que entra sin desborde | ✅ **PASA** — ver abajo |
 | **1.1** Prueba de las diez preguntas | **No se puede correr todavía**: la lista de las 10 preguntas reales no está cerrada. Existe material previo en `sp-interno` (`PREGUNTAS-FRECUENTES-asesores-2026-07.md`, 4 asesores) — no se arranca de cero | ⏸ Pendiente |
 
 **Sobre 1.4:** los hallazgos son de notas del blog publicadas por el motor de
@@ -89,14 +89,14 @@ Es el mismo error que este boletín vino a corregir, cometido una fila más abaj
 concreto de la suite — es una comparación de tres líneas — y hasta que exista,
 la fila dice lo que realmente hay.
 
-### 1.5 — la fila que faltaba: fallaba, y desde el 6 ago pasa
+### 1.5 — la fila que faltaba: fallaba, y desde el 7 sep pasa
 
 **Cómo fallaba.** El simulador entregaba un precio y **después pedía nombre y
 teléfono**. En ese tramo no nombraba la carencia. Alguien podía dejar sus datos
 entusiasmado por un número sin saber que el servicio que le importa tiene meses
 de espera.
 
-**Cómo se arregló** (6 ago 2026 — *"Sería bueno ser ya transparentes con las
+**Cómo se arregló** (7 sep 2026 — *"Sería bueno ser ya transparentes con las
 carencias"*, Arturo). El resultado del simulador muestra, **antes del
 formulario**, un bloque "Cuánto esperás para usar cada cobertura" con las
 esperas del plan elegido — nueve servicios en Bronze/Silver/Gold, seis en
@@ -132,7 +132,7 @@ conversión, agrega ansiedad sin agregar información.
 
 **Por qué tardó un día.** Toca `app/components/Simulador.jsx`, que lleva la
 guarda ⚠ del "puente de venta" (HANDOFF 11w): ese archivo no se toca sin
-acordarlo. El acuerdo llegó el 6 ago con la frase de arriba, y la guarda sigue
+acordarlo. El acuerdo llegó el 7 sep con la frase de arriba, y la guarda sigue
 puesta para el resto del puente (contexto del número, datos como regalo, cara
 del asesor).
 

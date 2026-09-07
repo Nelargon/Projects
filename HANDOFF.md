@@ -1023,7 +1023,7 @@ usa `npm ci`).
       nombrados va a `sp-interno`. A la web pública solo llegan afirmaciones
       sobre la **categoría de producto**, con fuente y fecha.
 
-12d. **⭐ LA CARENCIA ANTES DEL TELÉFONO (6 ago 2026 — *"Sería bueno ser ya
+12d. **⭐ LA CARENCIA ANTES DEL TELÉFONO (7 sep 2026 — *"Sería bueno ser ya
     transparentes con las carencias"*, Arturo). HECHO** (BITACORA cap. 70).
     El resultado del simulador daba el precio y pedía nombre y teléfono **sin
     nombrar la carencia**; la Puerta 1.5 del criterio de evaluación fallaba
@@ -1054,7 +1054,7 @@ usa `npm ci`).
     - **De dónde viene el pedido:** es el acto A7 de la estrategia de marketing
       *"levantar la niebla"* — la transparencia como práctica verificable, no
       como adjetivo — que vive en `sp-interno`
-      (`project/ESTRATEGIA-levantar-la-niebla-2026-08.md`, privado). Cada
+      (`project/ESTRATEGIA-levantar-la-niebla-2026-09.md`, privado). Cada
       pieza así se publica solo cuando es cierta y se protege con un test.
     Territorio: `app/components/Simulador.jsx`, `app/coverage.js`,
     `app/glossary.jsx` (`waitLabel` gana un modo corto), `app/page.jsx` (FAQ),
@@ -1858,7 +1858,7 @@ contra las tres puertas, con números.
 4. **Las 10 preguntas** de la Puerta 1.1 no se pueden correr hasta que la lista
    exista; hay material previo en `sp-interno`
    (`PREGUNTAS-FRECUENTES-asesores-2026-07.md`).
-5. ~~**La carencia antes del teléfono** (Puerta 1.5)~~ — **hecha el 6 ago**
+5. ~~**La carencia antes del teléfono** (Puerta 1.5)~~ — **hecha el 7 sep**
    (dec. 12d): el resultado del simulador muestra las esperas del plan antes del
    formulario, y la suite verifica la posición, no solo la presencia.
 

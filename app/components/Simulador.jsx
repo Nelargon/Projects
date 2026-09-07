@@ -736,7 +736,7 @@ export default function Simulador() {
                 </div>
               )}
 
-              {/* LAS ESPERAS, ANTES DEL TELÉFONO (6 ago 2026 — "Sería bueno ser
+              {/* LAS ESPERAS, ANTES DEL TELÉFONO (7 sep 2026 — "Sería bueno ser
                   ya transparentes con las carencias", Arturo). Hasta hoy el
                   resultado daba el precio y pedía nombre y teléfono sin nombrar
                   la carencia; la Puerta 1.5 del criterio de evaluación fallaba

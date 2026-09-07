@@ -32,7 +32,7 @@ export const coverage = () => [
   { name: 'Medicamentos en internación', icon: 'M10 3 3 10a5 5 0 0 0 7 7l7-7a5 5 0 0 0-7-7ZM7 7l7 7', cov: [yes('Hasta ₲ 500 mil por evento'), yes('Hasta ₲ 1 millón por evento'), yes('Hasta ₲ 1,5 millones por evento')] },
 ];
 
-// LAS ESPERAS QUE IMPORTAN AL DECIDIR (6 ago 2026 — "Sería bueno ser ya
+// LAS ESPERAS QUE IMPORTAN AL DECIDIR (7 sep 2026 — "Sería bueno ser ya
 // transparentes con las carencias", Arturo). Es lo que el simulador muestra
 // ANTES de pedir nombre y teléfono: la Puerta 1.5 del criterio de evaluación
 // fallaba exactamente por no hacerlo. Orden [Bronze, Silver, Gold], en días;
@@ -55,7 +55,7 @@ export const carencias = () => [
   { que: 'Resonancia', dias: [null, 150, 150], sinCobertura: 'Desde Silver' },
   // Cuadro 3 (cirugías e internación): 292 de 314 filas → 210 / 180 / 150 días.
   // ⚠ La FAQ decía "7 meses" para los tres planes: era el número de Bronze.
-  // Silver espera 6 y Gold 5. Se corrigió el 6 ago 2026.
+  // Silver espera 6 y Gold 5. Se corrigió el 7 sep 2026.
   { que: 'Cirugías programadas', dias: [210, 180, 150], nota: 'la mayoría' },
   // Parámetros clave: "Carencia de maternidad: 300 días". Cesárea: 150 en Gold.
   { que: 'Parto', dias: [300, 300, 300], notaPlan: [null, null, 'La cesárea espera 5 meses en Gold'] },
