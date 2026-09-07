@@ -184,12 +184,15 @@ export function Term({ k, children }) {
 // Texto de espera en idioma de familia. 300 días se dice "10 meses": nadie
 // cuenta en días a esa escala, y "300 días" suena a letra chica mientras que
 // "10 meses" se entiende de una.
-export function waitLabel(days) {
+// `corto` omite el "de espera": en una lista con encabezado propio ("Cuánto
+// esperás para usarlo") repetirlo nueve veces es ruido, no claridad.
+export function waitLabel(days, corto = false) {
   if (days === null || days === undefined) return null;
   if (days === 0) return 'Sin espera';
-  if (days < 60) return `${days} días de espera`;
+  const suf = corto ? '' : ' de espera';
+  if (days < 60) return `${days} días${suf}`;
   const m = Math.round(days / 30);
-  return `${m} meses de espera`;
+  return `${m} meses${suf}`;
 }
 
 // Reconoce términos del glosario dentro de un texto y los envuelve en <Term>.

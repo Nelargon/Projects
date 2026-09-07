@@ -2599,6 +2599,62 @@ footer, en el simulador y en mi-sp.
 
 ---
 
+## Capítulo 70 — La carencia antes del teléfono, y la FAQ que decía un solo número para tres planes
+
+**Qué intentamos.** El usuario, después de fijar la estrategia de marketing
+como práctica verificable (en `sp-interno`): *"Sería bueno ser ya
+transparentes con las carencias."* Es el primer acto de esa lista que estaba
+en rojo: el simulador daba el precio y pedía nombre y teléfono **sin nombrar
+la carencia**, y la Puerta 1.5 del criterio de evaluación fallaba exactamente
+por eso. El bloque toca `Simulador.jsx`, que lleva la guarda ⚠ 11w ("no tocar
+sin acordar"): la frase del usuario es el acuerdo, y la guarda sigue puesta
+para lo demás del puente de venta.
+
+**Qué pasó.** Tres cosas que no estaban en el pedido.
+
+1. **La FAQ de la home estaba mal, en la dirección segura.** Decía *"la
+   mayoría de las cirugías programadas, 7 meses"* para los tres planes. La
+   grilla dice 210 / 180 / 150 días (292 de 314 filas del cuadro 3): **7 meses
+   es Bronze; Silver espera 6 y Gold 5.** Nadie se quejó porque el error
+   prometía menos de lo real, no más. Pero un número que se copia a mano de
+   una tabla de 935 filas y se resume en una frase es un número que se
+   desactualiza solo. Se corrigió, y las esperas del simulador ya no se
+   escriben a mano: salen de `coverage.js`, la misma fuente que el comparador
+   y `/planes`.
+2. **Plan Vital sí tenía datos.** El instinto era "para 65+ no hay grilla de
+   carencias, que lo diga el asesor" — el mismo *derivar al asesor lo que ya
+   sabemos* que este bloque vino a corregir. La grilla propia de Vital agrupa
+   las coberturas **por carencia** (inmediata · 90 · 180 · 365 días): había
+   que mirarla, no suponerla.
+3. **El orden es parte de la honestidad.** Las nueve filas ordenadas de "sin
+   espera" a "10 meses" se leen como una línea de tiempo; las mismas nueve en
+   el orden del cuadernillo se leen como letra chica. Lo que el plan no cubre
+   va al final, dicho como oportunidad ("Desde Silver"), en dorado — la regla
+   de tono de siempre, aplicada en el momento más delicado del sitio.
+
+Y una decisión de método: el QA no verifica solo que el bloque exista.
+Verifica que **preceda al formulario en el DOM** y que traiga la espera más
+cara de descubrir tarde (parto, 10 meses). Si alguien lo baja "para convertir
+más", el build se pone rojo.
+
+**Qué aprendimos.**
+
+1. **Un dato que se copia a mano de una tabla ya está desactualizado.** La FAQ
+   no estaba equivocada cuando se escribió: se resumió. El único texto de
+   cobertura que se mantiene cierto es el que renderiza desde la fuente.
+2. **"No tenemos ese dato" hay que probarlo, no suponerlo.** Vital estuvo a
+   una suposición de quedar con un "consultá a tu asesor" — con la grilla
+   sentada al lado en `datos/planes-vigentes/`.
+3. **Un acto de transparencia se protege con un test de posición, no de
+   presencia.** El riesgo real no es que el bloque desaparezca: es que en
+   seis meses alguien lo mueve debajo del formulario con la mejor intención.
+   Presencia y orden son dos chequeos distintos, y el segundo es el que vale.
+4. **Una guarda se levanta con una frase del dueño, por escrito, y solo para
+   lo que la frase cubre.** 11w protegía cuatro cosas; el usuario habilitó
+   una. Las otras tres siguen esperando su acuerdo.
+
+---
+
 *Próxima entrada: cuando fusionemos el siguiente cambio o aprendamos la
 siguiente lección — lo que ocurra primero. El ritual: cada PR fusionado
 deja su entrada si enseñó algo — detectado automáticamente, sin que nadie

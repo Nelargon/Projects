@@ -26,7 +26,7 @@ que construye.
 
 | Puerta | Objetivo | Estado del prototipo |
 |---|---|---|
-| **1 · Claridad** | A | **NO PASA** — 1.5 falla, 1.4 tiene hallazgos, 1.1 no se pudo correr |
+| **1 · Claridad** | A | **NO PASA todavía** — 1.5 pasa desde el 6 ago; 1.4 tiene hallazgos en el blog; 1.1 no se pudo correr |
 | **2 · Accesibilidad y rendimiento** | A | **Pasa lo medible**; una métrica no es medible en laboratorio |
 | **3 · Craft, marca y futuro** | B+ | **Pasa 3.1 y 3.3**; 3.2 espera una decisión de marca (`₲` vs `Gs.`) |
 
@@ -45,9 +45,11 @@ que construye.
 
 **Las dos conclusiones incómodas:**
 
-1. **La Puerta 1 no pasa.** El flujo que pide nombre y teléfono no nombra la
-   carencia antes de pedirlos (1.5), y la prueba de las diez preguntas ni
-   siquiera se pudo correr (1.1).
+1. **La Puerta 1 no pasa todavía — pero ya no por lo que fallaba.** El flujo
+   que pide nombre y teléfono **ahora nombra la carencia antes de pedirlos**
+   (1.5, arreglado y automatizado el 6 ago). Lo que sigue abierto es la prueba
+   de las diez preguntas, que ni siquiera se pudo correr (1.1), y cinco notas
+   del blog con jerga (1.4).
 2. **La Puerta 3 pasa por tokens, y no era gratis.** Cuando este boletín se
    escribió, no la pasábamos: 970 colores a mano. Se hizo la pasada (§3.1) y hoy
    el guardián está verde con una vara más exigente que la que tenía. Lo que
@@ -69,7 +71,7 @@ que construye.
 | **1.2** Lugar permanente para lo que NO cubrimos, sin PDF ni enlace externo | **Inspección manual** de la sección de planes: contiene exclusiones ("Para que no haya sorpresas"), carencias por servicio y el aviso de los 10 meses de parto, en la misma página, sin abrir nada | ✅ *(no automatizado)* |
 | **1.3** Precio con piso real, no "consultanos" | **Inspección manual** del hero (publica "desde ₲ 238.000") + **automatizado** el recorrido del simulador hasta ver un precio sin dejar datos | ✅ *(el origen del "desde" NO está verificado — ver abajo)* |
 | **1.4** Lenguaje de paciente, cero jerga | **Automatizado**: la suite busca `cartilla`, `prestación` y `práctica` en el HTML publicado de las 9 páginas | ⚠️ **3 notas del blog** dicen "práctica"; 2 tienen placeholders "a confirmar" |
-| **1.5** El flujo que pide datos avisa antes de pedirlos | **Inspección del simulador** | ❌ **NO PASA** — ver abajo |
+| **1.5** El flujo que pide datos avisa antes de pedirlos | **Automatizado** (6 ago 2026): la suite llega al resultado del simulador y verifica sobre el DOM que el bloque de esperas existe, tiene tamaño, **precede al formulario** y trae la espera más cara de descubrir tarde (parto, 10 meses); en 390px, además, que entra sin desborde | ✅ **PASA** — ver abajo |
 | **1.1** Prueba de las diez preguntas | **No se puede correr todavía**: la lista de las 10 preguntas reales no está cerrada. Existe material previo en `sp-interno` (`PREGUNTAS-FRECUENTES-asesores-2026-07.md`, 4 asesores) — no se arranca de cero | ⏸ Pendiente |
 
 **Sobre 1.4:** los hallazgos son de notas del blog publicadas por el motor de
@@ -87,11 +89,29 @@ Es el mismo error que este boletín vino a corregir, cometido una fila más abaj
 concreto de la suite — es una comparación de tres líneas — y hasta que exista,
 la fila dice lo que realmente hay.
 
-### 1.5 — la fila que faltaba, y no pasa
+### 1.5 — la fila que faltaba: fallaba, y desde el 6 ago pasa
 
-El simulador entrega un precio y **después pide nombre y teléfono**. En ese
-tramo no nombra la carencia. Alguien puede dejar sus datos entusiasmado por un
-número sin saber que el servicio que le importa tiene meses de espera.
+**Cómo fallaba.** El simulador entregaba un precio y **después pedía nombre y
+teléfono**. En ese tramo no nombraba la carencia. Alguien podía dejar sus datos
+entusiasmado por un número sin saber que el servicio que le importa tiene meses
+de espera.
+
+**Cómo se arregló** (6 ago 2026 — *"Sería bueno ser ya transparentes con las
+carencias"*, Arturo). El resultado del simulador muestra, **antes del
+formulario**, un bloque "Cuánto esperás para usar cada cobertura" con las
+esperas del plan elegido — nueve servicios en Bronze/Silver/Gold, seis en
+Vital — ordenadas de "sin espera" a "10 meses", y lo que el plan no cubre al
+final como oportunidad ("Desde Silver"). Salen de `app/coverage.js`, la misma
+fuente que el comparador y `/planes`: una sola verdad. La cotización
+descargable las lleva también.
+
+**Cómo se verifica.** La suite (1b) llega al resultado y comprueba sobre el
+DOM renderizado que el bloque existe, tiene tamaño, **precede al formulario**
+y trae la espera más cara de descubrir tarde (parto, 10 meses). En 390px
+(1b-bis) comprueba además que entra sin desborde. Es un test de **posición**,
+no de presencia: el riesgo real no es que el bloque desaparezca, es que alguien
+lo mueva debajo del formulario "para convertir más". Si pasa, el build se pone
+rojo.
 
 ⚠️ **Y acá hay un dato que corrige el instinto** — queda escrito porque ya se
 propuso una vez el arreglo equivocado. La encuesta a las cuatro asesoras
@@ -110,9 +130,19 @@ preexistencias hoy solo sabemos decir *"se evalúa caso por caso"*, que es
 **diferir**, no responder — y una frase que difiere, puesta en el momento de la
 conversión, agrega ansiedad sin agregar información.
 
-**No se arregló en este boletín** porque toca `app/components/Simulador.jsx`,
-que lleva la guarda ⚠ del "puente de venta" (HANDOFF 11w): ese archivo no se
-toca sin acordarlo. Queda como el hallazgo más accionable de la Puerta 1.
+**Por qué tardó un día.** Toca `app/components/Simulador.jsx`, que lleva la
+guarda ⚠ del "puente de venta" (HANDOFF 11w): ese archivo no se toca sin
+acordarlo. El acuerdo llegó el 6 ago con la frase de arriba, y la guarda sigue
+puesta para el resto del puente (contexto del número, datos como regalo, cara
+del asesor).
+
+**Un hallazgo colateral, corregido.** Al escribir las esperas desde la grilla
+apareció que la FAQ de la home decía *"la mayoría de las cirugías programadas, 7
+meses"* para los tres planes. La grilla dice **210 / 180 / 150 días**: 7 meses
+era Bronze; Silver espera 6 y Gold 5. El error iba en la dirección segura
+(prometía más espera de la real) y por eso nadie lo vio. Se corrigió — y es un
+argumento más para que los números de cobertura rendericen desde la fuente en
+vez de copiarse a mano.
 
 ---
 
