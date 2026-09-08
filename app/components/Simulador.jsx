@@ -158,7 +158,7 @@ export default function Simulador() {
     L.push('TOTAL ESTIMADO: ' + fmt(r.price) + ' / mes');
     // Lo que ves es lo que te llevás: las esperas viajan en la cotización.
     const esperas = carenciasDe(d);
-    if (esperas.length) { L.push(''); L.push('Cuánto esperás para usar cada cobertura (carencia):'); esperas.forEach((c) => L.push('  · ' + c.que + ': ' + c.label + (c.nota ? ' (' + c.nota + ')' : ''))); }
+    if (esperas.length) { L.push(''); L.push('Cuánto esperás para usar cada cobertura:'); esperas.forEach((c) => L.push('  · ' + c.que + ': ' + c.label + (c.nota ? ' (' + c.nota + ')' : ''))); }
     if (r.autoPay) L.push('Con débito automático o tarjeta de crédito: ' + fmt(r.autoPay) + ' / mes (10% de descuento)');
     if (r.vitalParticular) L.push('Precio con débito automático — pagando particular: ' + fmt(r.vitalParticular) + ' / mes');
     L.push('');
@@ -748,7 +748,7 @@ export default function Simulador() {
                 <div data-sp-carencias={sim.resName} style={css('margin-top:16px;border:1px solid var(--sp-line);border-radius:var(--r-sm);overflow:hidden')}>
                   <div style={css('padding:14px 16px 11px')}>
                     <div style={css('font-size:15px;font-weight:800;color:var(--sp-navy);line-height:1.3')}>Cuánto esperás para usar cada cobertura</div>
-                    <p style={css('font-family:var(--font-inter),sans-serif;font-size:12.5px;color:var(--sp-muted);line-height:1.5;margin:4px 0 0')}>Es la <Term k="carencia">carencia</Term> del {sim.resName}: el reloj arranca el día que te afiliás, no el día que lo necesitás. Te lo decimos ahora, antes de pedirte el teléfono, para que el número que ves sea el número completo.</p>
+                    <p style={css('font-family:var(--font-inter),sans-serif;font-size:12.5px;color:var(--sp-muted);line-height:1.5;margin:4px 0 0')}>Cada cobertura del {sim.resName} tiene un tiempo de espera, y el reloj arranca el día que te afiliás, no el día que la necesitás. En el contrato ese tiempo se llama <Term k="carencia">carencia</Term>. Te lo decimos ahora, antes de pedirte el teléfono, para que el número que ves sea el número completo.</p>
                   </div>
                   <div style={css('border-top:1px solid var(--sp-line-2)')}>
                     {sim.resCarencias.map((c, i) => (

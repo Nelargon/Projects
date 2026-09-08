@@ -2700,6 +2700,47 @@ renombrado a `-2026-09`).
 
 ---
 
+## Capítulo 72 — La palabra que va primero es la que la persona lee
+
+**Qué intentamos.** Nada nuevo: el bloque de esperas del simulador (cap. 70)
+ya estaba en producción. El usuario, al día siguiente: *"Acordate que la
+palabra carencia no le llega directo al corazón del cliente."*
+
+**Qué pasó.** El bloque se llamaba bien —*"Cuánto esperás para usar cada
+cobertura"*, valores en meses— y la frase explicativa arrancaba así: *"Es la
+carencia del Plan Silver: el reloj arranca el día que te afiliás…"*. La
+palabra del contrato iba primera, con su tooltip del glosario. Y el tooltip me
+había hecho sentir que estaba bien: la palabra estaba *explicada*. Pero
+explicada no es lo mismo que segunda. La persona lee "carencia" antes de leer
+nada, y ahí ya está en el idioma del seguro, no en el suyo.
+
+El sitio tenía las dos formas conviviendo sin que nadie lo notara: `/planes` y
+`/que-cubre` decían *"Los tiempos de espera son la carencia de cada
+servicio"* (bien: primero lo que se entiende, después el nombre), y el
+simulador y los subtítulos del menú ("Carencias, preexistencias…") decían lo
+contrario. Se dio vuelta la frase del simulador, la línea de la cotización
+descargable, los dos subtítulos del menú y el arranque de la respuesta de la
+FAQ. Y la regla quedó escrita en `CLAUDE.md`, con la frase del usuario.
+
+**Qué aprendimos.**
+
+1. **Un tooltip no arregla el orden de la frase.** El glosario explica la
+   palabra; no cambia cuál se lee primero. La regla de lenguaje tenía una
+   lista de palabras prohibidas y una prueba ("¿la dice una familia en su
+   casa?"); le faltaba la regla de orden: **lo que se entiende va primero, el
+   nombre del contrato va después, como traducción.**
+2. **Los clientes preguntan "carencia" y aun así no es su palabra.** Los
+   cuatro asesores la reportaron 4/4, con esa palabra. Es la que aprendieron
+   a temer, no la que sienten. La pregunta de la FAQ la conserva —porque es
+   lo que la gente busca— y la respuesta arranca con "es el tiempo que
+   esperás". Las dos cosas a la vez: el término para encontrarlo, el idioma
+   para entenderlo.
+3. **La convivencia de dos formas en el mismo sitio es el síntoma.** Cuando
+   una página dice A-luego-B y otra B-luego-A, no hay regla: hay costumbre de
+   cada sesión. Por eso esto va a `CLAUDE.md` y no solo al código.
+
+---
+
 *Próxima entrada: cuando fusionemos el siguiente cambio o aprendamos la
 siguiente lección — lo que ocurra primero. El ritual: cada PR fusionado
 deja su entrada si enseñó algo — detectado automáticamente, sin que nadie
